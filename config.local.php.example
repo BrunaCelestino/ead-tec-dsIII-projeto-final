@@ -1,9 +1,0 @@
-<?php
-return [
-    'host' => '127.0.0.1',
-    'port' => 3306,
-    'database' => 'projeto_final',
-    'username' => 'model_app',
-    'password' => 'PREENCHA_COM_A_SENHA_LOCAL',
-    'charset' => 'utf8mb4',
-];
