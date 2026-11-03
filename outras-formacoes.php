@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($descricao === '') {
             $mensagem = 'Informe a descrição da formação.';
             $tipoMensagem = 'erro';
-        } elseif (mb_strlen($descricao, 'UTF-8') > 150) {
+        } elseif ((preg_match_all('/./us', $descricao, $caracteres) ?: strlen($descricao)) > 150) {
             $mensagem = 'A descrição deve ter no máximo 150 caracteres.';
             $tipoMensagem = 'erro';
         } elseif (($inicio !== '' && !dataValida($inicio)) || ($fim !== '' && !dataValida($fim))) {
