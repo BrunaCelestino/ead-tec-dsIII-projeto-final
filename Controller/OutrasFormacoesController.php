@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } elseif ($dataFim < $dataInicio) {
                 $mensagem = 'A data final não pode ser anterior à data inicial.';
                 $tipoMensagem = 'erro';
-            } elseif ($descricao === '' || mb_strlen($descricao) > 150) {
+            } elseif ($descricao === '' || (function_exists('mb_strlen') ? mb_strlen($descricao, 'UTF-8') : strlen($descricao)) > 150) {
                 $mensagem = 'Informe uma descrição com até 150 caracteres.';
                 $tipoMensagem = 'erro';
             } else {
@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $tipoMensagem = 'erro';
             } else {
                 $formacao = new OutrasFormacoes();
-                if ($formacao->excluirBD((int) $id)) {
+                if ($formacao->excluirDoUsuario((int) $id, $idUsuario)) {
                     $mensagem = 'Formação removida.';
                     $tipoMensagem = 'sucesso';
                 } else {
