@@ -25,7 +25,7 @@ function obterUsuarioPadrao(): ?int
 
 function redirecionarParaModulo(): never
 {
-    header('Location: ../outras-formacoes.php', true, 303);
+    header('Location: outras-formacoes.php', true, 303);
     exit;
 }
 
