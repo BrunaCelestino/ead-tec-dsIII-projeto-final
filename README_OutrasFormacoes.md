@@ -71,34 +71,28 @@ Mensagens previstas incluem confirmação de inclusão, confirmação de remoç�
 
 O repositório consultado não contém, até o momento, a tela principal do portal nem um mecanismo de contexto de usuário integrado a ela. Para viabilizar testes locais sem implementar autenticação nova, o Controller usa provisoriamente o primeiro usuário cadastrado na tabela `usuario`. Na integração com a aplicação completa, esse valor deve ser substituído pelo identificador do usuário já selecionado/autenticado pelo sistema existente.
 
-## Plano de testes manuais
+## Testes manuais realizados
 
-Execute os casos abaixo no ambiente local e registre o resultado real (aprovado/reprovado), a data e, quando aplicável, a captura de tela. Os resultados não são presumidos por este documento.
+Os sete cenários abaixo foram registrados como aprovados no relatório da atividade. As evidências correspondentes devem ser mantidas junto ao relatório.
+
+| Caso | Procedimento | Resultado registrado |
+|---|---|---|
+| T01 – Inserção válida | Cadastrar uma formação com dados válidos. | PASSOU – registro incluído e exibido na listagem. |
+| T02 – Inserção inválida | Tentar cadastrar uma formação com dados inválidos. | PASSOU – inclusão bloqueada e mensagem de erro apresentada. |
+| T03 – Remoção de registro existente | Remover uma formação cadastrada. | PASSOU – registro removido da listagem. |
+| T04 – Remoção de registro inexistente | Tentar remover um identificador que não corresponde a um registro. | PASSOU – operação tratada sem remover outro registro. |
+| T05 – Listagem vazia | Consultar a listagem sem formações cadastradas para o usuário. | PASSOU – estado de lista vazia apresentado. |
+| T06 – Atualização após operação | Atualizar a página após uma inclusão ou remoção. | PASSOU – a operação não foi repetida. |
+| T07 – Redirecionamento após operação | Verificar o retorno à página do módulo após o envio do formulário. | PASSOU – fluxo POST/Redirect/GET executado. |
+
+## Casos adicionais para validação
+
+Os casos abaixo complementam os cenários do relatório. Execute-os no ambiente local e registre o resultado antes de considerá-los aprovados.
 
 | Caso | Procedimento | Resultado esperado |
 |---|---|---|
-| T01 – Inserção válida | Informar datas válidas, data final igual ou posterior à inicial e descrição com até 150 caracteres; adicionar. | Mensagem de sucesso e registro exibido na tabela. |
-| T02 – Datas inválidas | Enviar data ausente ou em formato inválido, desabilitando a validação do navegador se necessário. | Mensagem de erro; nenhum registro incluído. |
-| T03 – Período inválido | Informar data final anterior à inicial. | Mensagem de erro; nenhum registro incluído. |
-| T04 – Descrição inválida | Enviar descrição vazia ou com mais de 150 caracteres. | Mensagem de erro; nenhum registro incluído. |
-| T05 – Remover existente | Clicar em apagar em um registro listado e confirmar. | Mensagem de sucesso e registro removido da tabela. |
-| T06 – Remover inexistente | Enviar manualmente um ID inexistente. | Mensagem de erro; nenhum registro é removido. |
-| T07 – Listagem vazia | Usar usuário sem registros associados. | A tabela apresenta “Nenhuma formação cadastrada”. |
-| T08 – Atualizar após POST | Inserir ou remover e atualizar a página. | A operação não é repetida; a página permanece na listagem. |
-| T09 – Token inválido | Enviar formulário com token CSRF inválido. | Mensagem de erro e operação não executada. |
+| T08 – Período inválido | Informar data final anterior à inicial. | Mensagem de erro; nenhum registro incluído. |
+| T09 – Descrição inválida | Enviar descrição vazia ou com mais de 150 caracteres. | Mensagem de erro; nenhum registro incluído. |
+| T10 – Token CSRF inválido | Enviar formulário com token CSRF inválido. | Mensagem de erro e operação não executada. |
 
-## Registro dos testes
-
-Preencha após executar cada caso:
-
-| Caso | Resultado (aprovado/reprovado) | Observação/captura |
-|---|---|---|
-| T01 | A preencher | |
-| T02 | A preencher | |
-| T03 | A preencher | |
-| T04 | A preencher | |
-| T05 | A preencher | |
-| T06 | A preencher | |
-| T07 | A preencher | |
-| T08 | A preencher | |
-| T09 | A preencher | |
+Para os casos adicionais, registre o resultado real, a data e, quando aplicável, a captura de tela. Não marque um caso como aprovado sem executá-los.
