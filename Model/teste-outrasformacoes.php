@@ -1,5 +1,5 @@
 <?php
-require 'C:/Apache24/Model/OutrasFormacoes.php';
+require_once __DIR__ . '/OutrasFormacoes.php';
 
 $con = (new ConexaoBD())->conectar();
 $nome = 'Usuario temporario de teste';
