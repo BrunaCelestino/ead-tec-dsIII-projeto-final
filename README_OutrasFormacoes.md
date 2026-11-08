@@ -15,7 +15,7 @@ Permitir cadastrar, listar e remover outras formações vinculadas a um usuário
 
 ## Configuração
 
-1. Crie o banco e as tabelas executando `Model/schema.sql no MySQL.
+1. Crie o banco e as tabelas executando `Model/schema.sql` no MySQL.
 2. Copie `Model/config.local.php.example` para `Model/config.local.php`.
 3. Informe host, porta, banco, usuário e senha do MySQL em `config.local.php`.
 4. Não envie `config.local.php` com credenciais para o GitHub.
