@@ -166,7 +166,8 @@ function redirecionarParaModulo(): never
     exit;
 }
 
-$controller = new OutrasFormacoesController(obterUsuarioPadrao());
+$idUsuario = obterUsuarioPadrao();
+$controller = new OutrasFormacoesController($idUsuario);
 
 // Mensagens armazenadas na sessão para sobreviver ao redirecionamento POST/GET.
 $mensagem = (string) ($_SESSION['flash_outras_formacoes']['mensagem'] ?? '');
