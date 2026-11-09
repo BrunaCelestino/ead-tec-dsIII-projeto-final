@@ -9,7 +9,7 @@
 </head>
 <body class="w3-light-grey">
 <main class="w3-container" style="max-width:480px;margin:8vh auto">
-    <form action="administracao.php" method="post" class="w3-card-4 w3-white w3-padding-large w3-round-large">
+    <form action="index.php?area=admin" method="post" class="w3-card-4 w3-white w3-padding-large w3-round-large">
         <h2 class="w3-center w3-text-blue">Sistema de Currículos</h2>
         <h3 class="w3-center">Área do administrador</h3>
         <?php if (!empty($flash)): ?>
