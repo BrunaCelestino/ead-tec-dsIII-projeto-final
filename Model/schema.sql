@@ -59,6 +59,7 @@ CREATE TABLE IF NOT EXISTS administrador (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Compatibilidade com bancos criados por versões anteriores do projeto.
+ALTER TABLE usuario MODIFY senha VARCHAR(255) NULL;
 ALTER TABLE administrador MODIFY senha VARCHAR(255) NOT NULL;
 
 -- Administrador demonstrativo da atividade. A senha será convertida para hash
