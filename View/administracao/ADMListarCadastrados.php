@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Usuários cadastrados</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body class="w3-light-grey">
 <main class="w3-content w3-padding-32" style="max-width:1000px">
@@ -13,16 +14,17 @@
     </header>
     <div class="w3-responsive w3-white w3-card w3-padding">
         <table class="w3-table-all w3-centered">
-            <thead><tr class="w3-blue"><th>Código</th><th>Nome</th><th>CPF</th><th>E-mail</th></tr></thead>
+            <thead><tr class="w3-blue"><th>Código</th><th>Nome</th><th>CPF</th><th>E-mail</th><th>Visualizar</th></tr></thead>
             <tbody>
             <?php if (empty($usuariosCadastrados)): ?>
-                <tr><td colspan="4">Nenhum usuário cadastrado.</td></tr>
+                <tr><td colspan="5">Nenhum usuário cadastrado.</td></tr>
             <?php else: foreach ($usuariosCadastrados as $row): ?>
                 <tr>
                     <td><?= (int)$row['idusuario'] ?></td>
                     <td><?= htmlspecialchars((string)$row['nome'], ENT_QUOTES, 'UTF-8') ?></td>
                     <td><?= htmlspecialchars((string)$row['cpf'], ENT_QUOTES, 'UTF-8') ?></td>
                     <td><?= htmlspecialchars((string)($row['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></td>
+                    <td><a class="w3-button w3-blue w3-round-large" href="index.php?area=admin&pagina=visualizar&id=<?= (int)$row['idusuario'] ?>" aria-label="Visualizar cadastro de <?= htmlspecialchars((string)$row['nome'], ENT_QUOTES, 'UTF-8') ?>"><i class="fa fa-eye"></i> Visualizar</a></td>
                 </tr>
             <?php endforeach; endif; ?>
             </tbody>
