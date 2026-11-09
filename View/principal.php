@@ -71,13 +71,23 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
         .alerta.erro { background:#fff0f0; color:#9c2929; border:1px solid #f1cccc; }
         .secao { max-width:1120px; margin:0 auto 24px; padding:18px 22px; background:var(--cartao); border:0; border-radius:0; box-shadow:none; }
         .titulo-secao { display:flex; align-items:center; gap:12px; margin:0 0 20px; color:var(--azul-escuro); font-size:21px; font-weight:400; }
-        .titulo-secao i { display:none; }\n        .campo-com-icone { position:relative; display:flex; align-items:center; gap:8px; }\n        .campo-com-icone .icone-campo { flex:0 0 22px; width:22px; height:22px; color:var(--azul); }\n        .campo-com-icone .campo { min-width:0; }\n        .botao-principal svg { width:22px; height:22px; vertical-align:middle; }
+        .titulo-secao i { display:none; }
+        .campo-com-icone { position:relative; display:flex; align-items:center; gap:8px; }
+        .campo-com-icone .icone-campo { flex:0 0 22px; width:22px; height:22px; color:var(--azul); }
+        .campo-com-icone .campo { min-width:0; }
+        .botao-principal svg { width:22px; height:22px; vertical-align:middle; }
         label { display:block; margin:0 0 7px; color:#2196e6; font-size:12px; font-weight:400; text-align:center; }
         .campo { width:100%; min-height:38px; padding:8px 12px; margin-bottom:10px; border:1px solid #d4d4d4; border-radius:6px; background:#fff; color:var(--texto); font:inherit; font-size:13px; }
         .campo:focus { outline:2px solid #9fc4e8; border-color:var(--azul); }
         .linha-campos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
         .botao-principal { display:block; min-width:70px; margin:4px auto 8px; border:0; border-radius:6px; padding:10px 22px; background:var(--azul); color:#fff; font-size:19px; cursor:pointer; }
         .botao-principal:hover { background:var(--azul-escuro); }
+        .botao-adicionar { width:100px; height:52px; padding:10px 22px; }
+        .botao-adicionar svg { width:28px; height:28px; }
+        .botao-atualizar { width:90%; min-height:36px; padding:8px 14px; font-size:13px; }
+        #dados-pessoais .campo-com-icone { gap:12px; }
+        #dados-pessoais .campo-com-icone .icone-campo { flex-basis:28px; width:28px; height:24px; }
+        #dados-pessoais .campo { margin-bottom:8px; }
         .tabela-container { width:100%; overflow-x:auto; margin-top:22px; }
         .tabela-registros { width:100%; border-collapse:collapse; font-size:14px; }
         .tabela-registros th { padding:8px 13px; background:var(--azul); color:#fff; text-align:center; white-space:nowrap; font-size:12px; }
@@ -139,15 +149,11 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
             <form method="post" action="index.php?pagina=principal">
                 <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
                 <input type="hidden" name="acao" value="atualizar-dados">
-                <label for="nome">Nome completo</label>
-                <input class="campo" id="nome" name="txtNome" value="<?= h($usuarioLogado->getNome()) ?>" required maxlength="150">
-                <div class="linha-campos">
-                    <div><label for="cpf">CPF</label><input class="campo" id="cpf" name="txtCPF" value="<?= h($usuarioLogado->getCPF()) ?>" required maxlength="11" inputmode="numeric"></div>
-                    <div><label for="nascimento">Data de nascimento</label><input class="campo" id="nascimento" type="date" name="txtData" value="<?= h($usuarioLogado->getDataNascimento()) ?>"></div>
-                </div>
-                <label for="email">E-mail</label>
-                <input class="campo" id="email" type="email" name="txtEmail" value="<?= h($usuarioLogado->getEmail()) ?>" maxlength="150">
-                <button class="botao-principal" type="submit"><i class="fa fa-save"></i> &nbsp;Salvar dados</button>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2z"/></svg><input class="campo" aria-label="Nome completo" id="nome" name="txtNome" value="<?= h($usuarioLogado->getNome()) ?>" placeholder="Nome completo" required maxlength="150"></div>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M16 2v4M8 2v4M3 9h18"/></svg><input class="campo" aria-label="Data de nascimento" id="nascimento" type="date" name="txtData" value="<?= h($usuarioLogado->getDataNascimento()) ?>"></div>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="currentColor"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 9h5v1H6zm0 3h5v1H6zm8-2h5v4h-5z" fill="#fff"/></svg><input class="campo" aria-label="CPF" id="cpf" name="txtCPF" value="<?= h($usuarioLogado->getCPF()) ?>" placeholder="CPF" required maxlength="11" inputmode="numeric"></div>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m3 6 9 7 9-7"/></svg><input class="campo" aria-label="E-mail" id="email" type="email" name="txtEmail" value="<?= h($usuarioLogado->getEmail()) ?>" placeholder="E-mail" maxlength="150"></div>
+                <button class="botao-principal botao-atualizar" type="submit">Atualizar</button>
             </form>
         </section>
 
@@ -162,7 +168,7 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 </div>
                 <label for="formacao-descricao">Curso / instituição / descrição</label>
                 <input class="campo" id="formacao-descricao" name="txtDescricao" maxlength="150" required>
-                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar formação</button>
+                <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($formacoes, 'formacao', ['Início', 'Fim', 'Descrição'], 'idformacaoAcademica'); ?>
         </section>
@@ -180,7 +186,7 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 <input class="campo" id="empresa" name="txtEmpresa" maxlength="45" required>
                 <label for="experiencia-descricao">Descrição</label>
                 <input class="campo" id="experiencia-descricao" name="txtDescricao" maxlength="45" required>
-                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar experiência</button>
+                <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($experiencias, 'experiencia', ['Início', 'Fim', 'Empresa', 'Descrição'], 'idexperienciaprofissional'); ?>
         </section>
@@ -196,7 +202,7 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 </div>
                 <label for="outras-descricao">Descrição</label>
                 <input class="campo" id="outras-descricao" name="txtDescricao" maxlength="150" required>
-                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar outra formação</button>
+                <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($outrasFormacoes, 'outras', ['Início', 'Fim', 'Descrição'], 'idoutrasformacoes'); ?>
         </section>
