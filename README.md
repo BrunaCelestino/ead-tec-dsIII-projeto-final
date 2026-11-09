@@ -17,8 +17,9 @@ Projeto acadêmico desenvolvido em PHP orientado a objetos, com arquitetura MVC 
 6. Acesse `http://localhost/ead-tec-dsIII-projeto-final/`.
 
 ## Fluxo do portal
-- `index.php`: ponto de entrada.
-- `Controller/PortalController.php`: ponto central de navegação, autenticação, cadastro, sessão, validação CSRF e atualização de dados.
+- `index.php`: ponto único de entrada do sistema.
+- `Controller/Navegacao.php`: seleciona a View solicitada, verifica a sessão e carrega os dados necessários para a tela principal.
+- `Controller/PortalController.php`: processa as ações enviadas pelos formulários, incluindo autenticação, cadastro, sessão, validação CSRF e atualização de dados.
 - `Controller/ExperienciaProfissionalController.php`: inclusão, remoção segura e listagem das experiências profissionais.
 - `View/login.php`: login por CPF e senha.
 - `View/primeiroAcesso.php`: cadastro inicial.
