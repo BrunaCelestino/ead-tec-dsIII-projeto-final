@@ -1,47 +1,207 @@
 <?php
-function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
-function dataBR($v): string { if (!$v) return ''; $d=DateTime::createFromFormat('Y-m-d',(string)$v); return $d ? $d->format('d/m/Y') : h($v); }
-function tabelaRegistros(array $rows, string $tipo, array $colunas, string $idCampo): void {
- echo '<div class="w3-responsive"><table class="w3-table-all w3-margin-bottom"><thead><tr>';
- foreach ($colunas as $label) echo '<th>'.h($label).'</th>';
- echo '<th>Apagar</th></tr></thead><tbody>';
- if (!$rows) echo '<tr><td colspan="'.(count($colunas)+1).'" class="w3-center">Nenhum registro cadastrado.</td></tr>';
- foreach ($rows as $r) {
-  echo '<tr><td>'.h(dataBR($r['inicio'] ?? '')).'</td><td>'.h(dataBR($r['fim'] ?? '')).'</td>';
-  if ($tipo === 'experiencia') echo '<td>'.h($r['empresa'] ?? '').'</td>';
-  echo '<td>'.h($r['descricao'] ?? '').'</td><td><form method="post" action="index.php?pagina=principal" onsubmit="return confirm(\'Deseja excluir este registro?\')">';
-  echo '<input type="hidden" name="csrf_token" value="'.h($GLOBALS['csrf']).'"><input type="hidden" name="idRegistro" value="'.(int)$r[$idCampo].'">';
-  echo '<input type="hidden" name="acao" value="excluir-'.($tipo==='experiencia'?'experiencia':($tipo==='outras'?'outra-formacao':'formacao')).'"><button class="w3-button w3-red w3-small" type="submit">Apagar</button></form></td></tr>';
- }
- echo '</tbody></table></div>';
+declare(strict_types=1);
+
+function h($valor): string
+{
+    return htmlspecialchars((string)$valor, ENT_QUOTES, 'UTF-8');
+}
+
+function dataBR($valor): string
+{
+    if (!$valor) return '';
+    $data = DateTime::createFromFormat('Y-m-d', (string)$valor);
+    return $data ? $data->format('d/m/Y') : h($valor);
+}
+
+function tabelaRegistros(array $registros, string $tipo, array $colunas, string $campoId): void
+{
+    $acao = $tipo === 'experiencia' ? 'experiencia' : ($tipo === 'outras' ? 'outra-formacao' : 'formacao');
+    echo '<div class="tabela-container"><table class="tabela-registros"><thead><tr>';
+    foreach ($colunas as $coluna) echo '<th>' . h($coluna) . '</th>';
+    echo '<th class="coluna-acao">Ações</th></tr></thead><tbody>';
+
+    if (!$registros) {
+        echo '<tr><td colspan="' . (count($colunas) + 1) . '" class="sem-registros">Nenhum registro cadastrado.</td></tr>';
+    }
+
+    foreach ($registros as $registro) {
+        echo '<tr>';
+        echo '<td>' . h(dataBR($registro['inicio'] ?? '')) . '</td>';
+        echo '<td>' . h(dataBR($registro['fim'] ?? '')) . '</td>';
+        if ($tipo === 'experiencia') echo '<td>' . h($registro['empresa'] ?? '') . '</td>';
+        echo '<td>' . h($registro['descricao'] ?? '') . '</td>';
+        echo '<td><form method="post" action="index.php?pagina=principal" onsubmit="return confirm(\'Deseja excluir este registro?\')">';
+        echo '<input type="hidden" name="csrf_token" value="' . h($GLOBALS['csrf']) . '">';
+        echo '<input type="hidden" name="idRegistro" value="' . (int)$registro[$campoId] . '">';
+        echo '<input type="hidden" name="acao" value="excluir-' . $acao . '">';
+        echo '<button class="botao-excluir" type="submit" aria-label="Excluir registro"><i class="fa fa-trash"></i> Excluir</button>';
+        echo '</form></td></tr>';
+    }
+    echo '</tbody></table></div>';
 }
 ?>
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"><title>Sistema de Currículos</title>
-<style>body{font-family:Arial,sans-serif}.w3-sidebar{width:190px}.conteudo{margin-left:190px}.secao{max-width:1000px;margin:auto}.w3-input{margin-bottom:12px}@media(max-width:600px){.w3-sidebar{width:100%;height:auto;position:relative}.conteudo{margin-left:0}}</style></head>
-<body class="w3-light-grey">
-<nav class="w3-sidebar w3-bar-block w3-blue w3-card"><div class="w3-container w3-padding-16"><b>SISTEMA DE<br>CURRÍCULOS</b></div>
-<a href="#home" class="w3-bar-item w3-button"><i class="fa fa-home"></i> Home</a><a href="#dPessoais" class="w3-bar-item w3-button"><i class="fa fa-user"></i> Dados pessoais</a><a href="#formacao" class="w3-bar-item w3-button"><i class="fa fa-graduation-cap"></i> Formação</a><a href="#experiencia" class="w3-bar-item w3-button"><i class="fa fa-briefcase"></i> Experiência</a><a href="#outras" class="w3-bar-item w3-button"><i class="fa fa-book"></i> Outras formações</a>
-<form method="post" action="index.php" class="w3-container w3-padding"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="sair"><button class="w3-button w3-white w3-block" type="submit"><i class="fa fa-sign-out"></i> Sair</button></form></nav>
-<main class="conteudo w3-padding-large">
-<?php if ($flash): ?><div class="w3-panel <?= ($flash['tipo'] ?? '')==='erro'?'w3-pale-red':'w3-pale-green' ?> w3-display-container"><span onclick="this.parentElement.style.display='none'" class="w3-button w3-display-topright">&times;</span><?= h($flash['texto'] ?? '') ?></div><?php endif; ?>
-<header id="home" class="w3-container w3-padding-32 w3-center"><h1 class="w3-text-blue">Bem-vindo(a), <?= h($usuarioLogado->getNome()) ?>!</h1><p>Gerencie as informações do seu currículo.</p></header>
-<section id="dPessoais" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Dados Pessoais</h2>
-<form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="atualizar-dados">
-<label>Nome</label><input class="w3-input w3-border" name="txtNome" value="<?= h($usuarioLogado->getNome()) ?>" required maxlength="150">
-<label>CPF</label><input class="w3-input w3-border" name="txtCPF" value="<?= h($usuarioLogado->getCPF()) ?>" required maxlength="11" inputmode="numeric">
-<label>Data de nascimento</label><input class="w3-input w3-border" type="date" name="txtData" value="<?= h($usuarioLogado->getDataNascimento()) ?>">
-<label>E-mail</label><input class="w3-input w3-border" type="email" name="txtEmail" value="<?= h($usuarioLogado->getEmail()) ?>" maxlength="150">
-<button class="w3-button w3-blue" type="submit">Atualizar dados</button></form></section>
-<section id="formacao" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Formação Acadêmica</h2>
-<form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-formacao">
-<div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Curso / instituição / descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="150" required><button class="w3-button w3-blue" type="submit">Adicionar formação</button></form>
-<?php tabelaRegistros($formacoes,'formacao',['Início','Fim','Descrição'],'idformacaoAcademica'); ?></section>
-<section id="experiencia" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Experiência Profissional</h2>
-<form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-experiencia">
-<div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Empresa</label><input class="w3-input w3-border" name="txtEmpresa" maxlength="45" required><label>Descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="45" required><button class="w3-button w3-blue" type="submit">Adicionar experiência</button></form>
-<?php tabelaRegistros($experiencias,'experiencia',['Início','Fim','Empresa','Descrição'],'idexperienciaprofissional'); ?></section>
-<section id="outras" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Outras Formações</h2>
-<form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-outra-formacao">
-<div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="150" required><button class="w3-button w3-blue" type="submit">Adicionar outra formação</button></form>
-<?php tabelaRegistros($outrasFormacoes,'outras',['Início','Fim','Descrição'],'idoutrasformacoes'); ?></section>
-<footer class="w3-center w3-padding-32">Sistema de Currículos</footer></main></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Meu currículo | Sistema de Currículos</title>
+    <style>
+        :root { --azul:#174a7e; --azul-escuro:#12395f; --azul-claro:#eaf2fa; --fundo:#f3f6fa; --texto:#263445; }
+        * { box-sizing:border-box; }
+        html { scroll-behavior:smooth; scroll-padding-top:24px; }
+        body { margin:0; background:var(--fundo); color:var(--texto); font-family:Arial,Helvetica,sans-serif; }
+        .menu-lateral { position:fixed; inset:0 auto 0 0; width:250px; background:var(--azul); color:#fff; padding:26px 16px; display:flex; flex-direction:column; z-index:10; box-shadow:2px 0 12px #102b461c; }
+        .marca { padding:0 14px 28px; font-size:18px; line-height:1.45; font-weight:bold; letter-spacing:.5px; }
+        .menu-links { display:flex; flex-direction:column; gap:6px; }
+        .menu-links a { color:#eaf2fa; text-decoration:none; padding:13px 14px; border-radius:7px; transition:background .2s; }
+        .menu-links a:hover { background:#ffffff20; color:#fff; }
+        .menu-links i { width:25px; }
+        .menu-sair { margin-top:auto; padding:12px 8px 0; }
+        .menu-sair button { width:100%; border:0; border-radius:7px; padding:12px; cursor:pointer; background:#fff; color:var(--azul); font-weight:bold; }
+        .conteudo { margin-left:250px; padding:34px clamp(18px,4vw,54px); }
+        .topo { max-width:1120px; margin:0 auto 26px; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+        .topo h1 { margin:0; font-size:28px; color:var(--azul-escuro); font-weight:700; }
+        .topo p { margin:7px 0 0; color:#657487; }
+        .identificacao { color:var(--azul); background:#fff; border:1px solid #e2e9f1; border-radius:30px; padding:10px 16px; white-space:nowrap; }
+        .alerta { max-width:1120px; margin:0 auto 22px; padding:14px 18px; border-radius:8px; }
+        .alerta.sucesso { background:#e8f5ed; color:#21633b; border:1px solid #c9e8d3; }
+        .alerta.erro { background:#fff0f0; color:#9c2929; border:1px solid #f1cccc; }
+        .secao { max-width:1120px; margin:0 auto 24px; padding:26px 30px; background:#fff; border:1px solid #e4eaf1; border-radius:12px; box-shadow:0 3px 12px #193b5b0a; }
+        .titulo-secao { display:flex; align-items:center; gap:12px; margin:0 0 22px; color:var(--azul-escuro); font-size:21px; font-weight:700; }
+        .titulo-secao i { display:grid; place-items:center; width:38px; height:38px; border-radius:9px; background:var(--azul-claro); color:var(--azul); }
+        label { display:block; margin:0 0 7px; color:#3b4b5d; font-size:14px; font-weight:600; }
+        .campo { width:100%; min-height:43px; padding:10px 12px; margin-bottom:17px; border:1px solid #ccd6e1; border-radius:6px; background:#fff; color:var(--texto); font:inherit; }
+        .campo:focus { outline:2px solid #9fc4e8; border-color:var(--azul); }
+        .linha-campos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+        .botao-principal { border:0; border-radius:6px; padding:11px 18px; background:var(--azul); color:#fff; font-weight:600; cursor:pointer; }
+        .botao-principal:hover { background:var(--azul-escuro); }
+        .tabela-container { width:100%; overflow-x:auto; margin-top:22px; }
+        .tabela-registros { width:100%; border-collapse:collapse; font-size:14px; }
+        .tabela-registros th { padding:12px 13px; background:#f0f4f8; color:#40546a; text-align:left; white-space:nowrap; }
+        .tabela-registros td { padding:12px 13px; border-bottom:1px solid #e8edf2; vertical-align:middle; }
+        .tabela-registros tr:last-child td { border-bottom:0; }
+        .coluna-acao { width:120px; }
+        .sem-registros { padding:20px !important; color:#7b8794; text-align:center; }
+        .botao-excluir { border:0; border-radius:5px; padding:7px 10px; color:#a52d2d; background:#fff0f0; cursor:pointer; white-space:nowrap; }
+        .botao-excluir:hover { background:#fbdede; }
+        footer { max-width:1120px; margin:28px auto 0; padding:18px; color:#8190a0; text-align:center; font-size:13px; }
+        @media(max-width:760px) {
+            .menu-lateral { position:relative; width:100%; padding:14px; }
+            .marca { padding:4px 8px 12px; }
+            .menu-links { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+            .menu-links a { padding:10px; font-size:14px; }
+            .menu-sair { margin-top:12px; padding:4px 0 0; }
+            .conteudo { margin:0; padding:22px 14px; }
+            .topo { align-items:flex-start; flex-direction:column; }
+            .topo h1 { font-size:24px; }
+            .secao { padding:21px 17px; }
+        }
+        @media(max-width:480px) { .linha-campos { grid-template-columns:1fr; gap:0; } .menu-links { grid-template-columns:1fr 1fr; } }
+    </style>
+</head>
+<body>
+    <aside class="menu-lateral">
+        <div class="marca"><i class="fa fa-file-text-o"></i> &nbsp;SISTEMA DE<br>CURRÍCULOS</div>
+        <nav class="menu-links" aria-label="Navegação do currículo">
+            <a href="#inicio"><i class="fa fa-home"></i> Início</a>
+            <a href="#dados-pessoais"><i class="fa fa-user"></i> Dados pessoais</a>
+            <a href="#formacao"><i class="fa fa-graduation-cap"></i> Formação acadêmica</a>
+            <a href="#experiencia"><i class="fa fa-briefcase"></i> Experiência profissional</a>
+            <a href="#outras-formacoes"><i class="fa fa-book"></i> Outras formações</a>
+        </nav>
+        <form class="menu-sair" method="post" action="index.php">
+            <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
+            <input type="hidden" name="acao" value="sair">
+            <button type="submit"><i class="fa fa-sign-out"></i> &nbsp;Sair</button>
+        </form>
+    </aside>
+
+    <main class="conteudo">
+        <?php if ($flash): ?>
+            <div class="alerta <?= ($flash['tipo'] ?? '') === 'erro' ? 'erro' : 'sucesso' ?>" role="status">
+                <?= h($flash['texto'] ?? '') ?>
+            </div>
+        <?php endif; ?>
+
+        <header class="topo" id="inicio">
+            <div>
+                <h1>Meu currículo</h1>
+                <p>Gerencie todas as informações do seu currículo em um só lugar.</p>
+            </div>
+            <div class="identificacao"><i class="fa fa-user-circle"></i> &nbsp;<?= h($usuarioLogado->getNome()) ?></div>
+        </header>
+
+        <section class="secao" id="dados-pessoais">
+            <h2 class="titulo-secao"><i class="fa fa-user"></i> Dados pessoais</h2>
+            <form method="post" action="index.php?pagina=principal">
+                <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
+                <input type="hidden" name="acao" value="atualizar-dados">
+                <label for="nome">Nome completo</label>
+                <input class="campo" id="nome" name="txtNome" value="<?= h($usuarioLogado->getNome()) ?>" required maxlength="150">
+                <div class="linha-campos">
+                    <div><label for="cpf">CPF</label><input class="campo" id="cpf" name="txtCPF" value="<?= h($usuarioLogado->getCPF()) ?>" required maxlength="11" inputmode="numeric"></div>
+                    <div><label for="nascimento">Data de nascimento</label><input class="campo" id="nascimento" type="date" name="txtData" value="<?= h($usuarioLogado->getDataNascimento()) ?>"></div>
+                </div>
+                <label for="email">E-mail</label>
+                <input class="campo" id="email" type="email" name="txtEmail" value="<?= h($usuarioLogado->getEmail()) ?>" maxlength="150">
+                <button class="botao-principal" type="submit"><i class="fa fa-save"></i> &nbsp;Salvar dados</button>
+            </form>
+        </section>
+
+        <section class="secao" id="formacao">
+            <h2 class="titulo-secao"><i class="fa fa-graduation-cap"></i> Formação acadêmica</h2>
+            <form method="post" action="index.php?pagina=principal">
+                <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
+                <input type="hidden" name="acao" value="adicionar-formacao">
+                <div class="linha-campos">
+                    <div><label for="formacao-inicio">Data inicial</label><input class="campo" id="formacao-inicio" type="date" name="txtInicio" required></div>
+                    <div><label for="formacao-fim">Data final</label><input class="campo" id="formacao-fim" type="date" name="txtFim" required></div>
+                </div>
+                <label for="formacao-descricao">Curso / instituição / descrição</label>
+                <input class="campo" id="formacao-descricao" name="txtDescricao" maxlength="150" required>
+                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar formação</button>
+            </form>
+            <?php tabelaRegistros($formacoes, 'formacao', ['Início', 'Fim', 'Descrição'], 'idformacaoAcademica'); ?>
+        </section>
+
+        <section class="secao" id="experiencia">
+            <h2 class="titulo-secao"><i class="fa fa-briefcase"></i> Experiência profissional</h2>
+            <form method="post" action="index.php?pagina=principal">
+                <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
+                <input type="hidden" name="acao" value="adicionar-experiencia">
+                <div class="linha-campos">
+                    <div><label for="experiencia-inicio">Data inicial</label><input class="campo" id="experiencia-inicio" type="date" name="txtInicio" required></div>
+                    <div><label for="experiencia-fim">Data final</label><input class="campo" id="experiencia-fim" type="date" name="txtFim" required></div>
+                </div>
+                <label for="empresa">Empresa</label>
+                <input class="campo" id="empresa" name="txtEmpresa" maxlength="45" required>
+                <label for="experiencia-descricao">Descrição</label>
+                <input class="campo" id="experiencia-descricao" name="txtDescricao" maxlength="45" required>
+                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar experiência</button>
+            </form>
+            <?php tabelaRegistros($experiencias, 'experiencia', ['Início', 'Fim', 'Empresa', 'Descrição'], 'idexperienciaprofissional'); ?>
+        </section>
+
+        <section class="secao" id="outras-formacoes">
+            <h2 class="titulo-secao"><i class="fa fa-book"></i> Outras formações</h2>
+            <form method="post" action="index.php?pagina=principal">
+                <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
+                <input type="hidden" name="acao" value="adicionar-outra-formacao">
+                <div class="linha-campos">
+                    <div><label for="outras-inicio">Data inicial</label><input class="campo" id="outras-inicio" type="date" name="txtInicio" required></div>
+                    <div><label for="outras-fim">Data final</label><input class="campo" id="outras-fim" type="date" name="txtFim" required></div>
+                </div>
+                <label for="outras-descricao">Descrição</label>
+                <input class="campo" id="outras-descricao" name="txtDescricao" maxlength="150" required>
+                <button class="botao-principal" type="submit"><i class="fa fa-plus"></i> &nbsp;Adicionar outra formação</button>
+            </form>
+            <?php tabelaRegistros($outrasFormacoes, 'outras', ['Início', 'Fim', 'Descrição'], 'idoutrasformacoes'); ?>
+        </section>
+
+        <footer>Sistema de Currículos</footer>
+    </main>
+</body>
+</html>
