@@ -29,7 +29,7 @@
         </table>
     </div>
     <p class="w3-center w3-padding-16">
-        <a class="w3-button w3-blue w3-round-large" href="administracao.php?pagina=principal">Voltar ao painel</a>
+        <a class="w3-button w3-blue w3-round-large" href="index.php?area=admin&pagina=principal">Voltar ao painel</a>
     </p>
 </main>
 </body>
