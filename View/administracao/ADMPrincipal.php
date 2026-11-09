@@ -20,17 +20,17 @@
     </header>
     <section class="w3-row-padding w3-center">
         <div class="w3-half w3-margin-bottom">
-            <a href="administracao.php?pagina=usuarios" class="w3-button w3-blue w3-round-large w3-padding-32 w3-block">
+            <a href="index.php?area=admin&pagina=usuarios" class="w3-button w3-blue w3-round-large w3-padding-32 w3-block">
                 <i class="fa fa-users w3-xxlarge"></i><br>Usuários cadastrados
             </a>
         </div>
         <div class="w3-half w3-margin-bottom">
-            <a href="administracao.php?pagina=administradores" class="w3-button w3-blue w3-round-large w3-padding-32 w3-block">
+            <a href="index.php?area=admin&pagina=administradores" class="w3-button w3-blue w3-round-large w3-padding-32 w3-block">
                 <i class="fa fa-address-card w3-xxlarge"></i><br>Administradores cadastrados
             </a>
         </div>
     </section>
-    <form action="administracao.php" method="post" class="w3-center w3-padding-16">
+    <form action="index.php?area=admin" method="post" class="w3-center w3-padding-16">
         <input type="hidden" name="area" value="admin">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
         <input type="hidden" name="acao_admin" value="sair">
