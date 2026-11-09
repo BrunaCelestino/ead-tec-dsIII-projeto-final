@@ -49,16 +49,19 @@ CREATE TABLE IF NOT EXISTS outrasformacoes (
  ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `projeto_final`.`administrador` (
-`idadministrador` INT(11) NOT NULL AUTO_INCREMENT,
-`nome` VARCHAR(45) NULL DEFAULT NULL,
-`cpf` VARCHAR(11) NOT NULL,
-`senha` VARCHAR(45) NOT NULL,
-PRIMARY KEY (`idadministrador`))
-ENGINE = InnoDB
-AUTO_INCREMENT = 2
-DEFAULT CHARACTER SET = latin1;
+CREATE TABLE IF NOT EXISTS administrador (
+    idadministrador INT NOT NULL AUTO_INCREMENT,
+    nome VARCHAR(150) NULL,
+    cpf VARCHAR(11) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    PRIMARY KEY (idadministrador),
+    UNIQUE KEY administrador_cpf_UNIQUE (cpf)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-INSERT INTO `projeto_final`.`administrador`
-(`nome`, `cpf`, `senha`) VALUES ('Bia',
-'22222222222', 'bia123');
+-- Compatibilidade com bancos criados por versões anteriores do projeto.
+ALTER TABLE administrador MODIFY senha VARCHAR(255) NOT NULL;
+
+-- Administrador demonstrativo da atividade. A senha será convertida para hash
+-- automaticamente no primeiro login bem-sucedido.
+INSERT IGNORE INTO administrador (nome, cpf, senha)
+VALUES ('Bia', '22222222222', 'bia123');
