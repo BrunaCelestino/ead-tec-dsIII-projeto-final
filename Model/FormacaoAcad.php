@@ -54,6 +54,25 @@ class FormacaoAcad
             $this->ultimoErro=null; return true;
         } catch (Throwable $e) { $this->ultimoErro=$e->getMessage(); return false; }
     }
+
+    public function excluirDoUsuario(int $id, int $idusuario): bool
+    {
+        try {
+            $con = (new ConexaoBD())->conectar();
+            $stmt = $con->prepare('DELETE FROM formacaoacademica WHERE idformacaoAcademica = ? AND idusuario = ?');
+            $stmt->bind_param('ii', $id, $idusuario);
+            $stmt->execute();
+            $excluiu = $stmt->affected_rows > 0;
+            $stmt->close();
+            $con->close();
+            $this->ultimoErro = $excluiu ? null : 'Registro não encontrado.';
+            return $excluiu;
+        } catch (Throwable $e) {
+            $this->ultimoErro = $e->getMessage();
+            return false;
+        }
+    }
+
     public function listarFormacoes(int $idusuario): array
     {
         $con=(new ConexaoBD())->conectar();
