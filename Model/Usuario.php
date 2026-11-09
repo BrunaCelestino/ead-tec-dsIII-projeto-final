@@ -12,18 +12,54 @@ class Usuario
     private ?string $senha = null;
     private ?string $ultimoErro = null;
 
-    public function setID(?int $v): void { $this->id = $v; }
-    public function getID(): ?int { return $this->id; }
-    public function setNome(?string $v): void { $this->nome = $v; }
-    public function getNome(): ?string { return $this->nome; }
-    public function setCPF(?string $v): void { $this->cpf = $v; }
-    public function getCPF(): ?string { return $this->cpf; }
-    public function setDataNascimento(?string $v): void { $this->dataNascimento = $v; }
-    public function getDataNascimento(): ?string { return $this->dataNascimento; }
-    public function setEmail(?string $v): void { $this->email = $v; }
-    public function getEmail(): ?string { return $this->email; }
-    public function setSenha(?string $v): void { $this->senha = $v; }
-    public function getUltimoErro(): ?string { return $this->ultimoErro; }
+    public function setID(?int $v): void
+    {
+        $this->id = $v;
+    }
+    public function getID(): ?int
+    {
+        return $this->id;
+    }
+    public function setNome(?string $v): void
+    {
+        $this->nome = $v;
+    }
+    public function getNome(): ?string
+    {
+        return $this->nome;
+    }
+    public function setCPF(?string $v): void
+    {
+        $this->cpf = $v;
+    }
+    public function getCPF(): ?string
+    {
+        return $this->cpf;
+    }
+    public function setDataNascimento(?string $v): void
+    {
+        $this->dataNascimento = $v;
+    }
+    public function getDataNascimento(): ?string
+    {
+        return $this->dataNascimento;
+    }
+    public function setEmail(?string $v): void
+    {
+        $this->email = $v;
+    }
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+    public function setSenha(?string $v): void
+    {
+        $this->senha = $v;
+    }
+    public function getUltimoErro(): ?string
+    {
+        return $this->ultimoErro;
+    }
 
     public function inserirBD(): bool
     {
@@ -54,8 +90,11 @@ class Usuario
             $row = $stmt->get_result()->fetch_assoc();
             $stmt->close();
             $con->close();
-            if (!$row) { $this->ultimoErro = null; return false; }
-            $this->id = (int)$row['idusuario'];
+            if (!$row) {
+                $this->ultimoErro = null;
+                return false;
+            }
+            $this->id = (int) $row['idusuario'];
             $this->nome = $row['nome'];
             $this->cpf = $row['cpf'];
             $this->dataNascimento = $row['dataNascimento'];
@@ -69,7 +108,7 @@ class Usuario
         }
     }
 
-    
+
     public function carregarUsuario(string $cpf): bool
     {
         try {
@@ -80,8 +119,11 @@ class Usuario
             $row = $stmt->get_result()->fetch_assoc();
             $stmt->close();
             $con->close();
-            if (!$row) { $this->ultimoErro = null; return false; }
-            $this->id = (int)$row['idusuario'];
+            if (!$row) {
+                $this->ultimoErro = null;
+                return false;
+            }
+            $this->id = (int) $row['idusuario'];
             $this->nome = $row['nome'];
             $this->cpf = $row['cpf'];
             $this->dataNascimento = $row['dataNascimento'];
@@ -127,7 +169,10 @@ class Usuario
 
     public function alterarBD(): bool
     {
-        if ($this->id === null) { $this->ultimoErro = 'ID do usuário obrigatório.'; return false; }
+        if ($this->id === null) {
+            $this->ultimoErro = 'ID do usuário obrigatório.';
+            return false;
+        }
         try {
             $con = (new ConexaoBD())->conectar();
             if ($this->senha !== null && $this->senha !== '') {
@@ -138,21 +183,37 @@ class Usuario
                 $stmt = $con->prepare('UPDATE usuario SET nome=?,cpf=?,dataNascimento=?,email=? WHERE idusuario=?');
                 $stmt->bind_param('ssssi', $this->nome, $this->cpf, $this->dataNascimento, $this->email, $this->id);
             }
-            $stmt->execute(); $stmt->close(); $con->close();
-            $this->ultimoErro = null; return true;
-        } catch (Throwable $e) { $this->ultimoErro = $e->getMessage(); return false; }
+            $stmt->execute();
+            $stmt->close();
+            $con->close();
+            $this->ultimoErro = null;
+            return true;
+        } catch (Throwable $e) {
+            $this->ultimoErro = $e->getMessage();
+            return false;
+        }
     }
 
     public function excluirBD(?int $id = null): bool
     {
         $id = $id ?? $this->id;
-        if ($id === null) { $this->ultimoErro = 'ID do usuário obrigatório.'; return false; }
+        if ($id === null) {
+            $this->ultimoErro = 'ID do usuário obrigatório.';
+            return false;
+        }
         try {
             $con = (new ConexaoBD())->conectar();
             $stmt = $con->prepare('DELETE FROM usuario WHERE idusuario=?');
-            $stmt->bind_param('i', $id); $stmt->execute(); $stmt->close(); $con->close();
-            $this->ultimoErro = null; return true;
-        } catch (Throwable $e) { $this->ultimoErro = $e->getMessage(); return false; }
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $stmt->close();
+            $con->close();
+            $this->ultimoErro = null;
+            return true;
+        } catch (Throwable $e) {
+            $this->ultimoErro = $e->getMessage();
+            return false;
+        }
     }
 
     public function listarUsuarios(): array
@@ -160,7 +221,18 @@ class Usuario
         $con = (new ConexaoBD())->conectar();
         $result = $con->query('SELECT idusuario,nome,cpf,dataNascimento,email FROM usuario ORDER BY nome');
         $rows = $result->fetch_all(MYSQLI_ASSOC);
-        $result->free(); $con->close();
+        $result->free();
+        $con->close();
+        return $rows;
+    }
+
+    public function listaCadastrados()
+    {
+        $con = (new ConexaoBD())->conectar();
+        $result = $con->query("SELECT idusuario, nome FROM usuario;");
+        $rows = $result->fetch_all(MYSQLI_ASSOC);
+        $result->free();
+        $con->close();
         return $rows;
     }
 }
