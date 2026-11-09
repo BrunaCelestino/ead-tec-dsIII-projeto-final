@@ -126,17 +126,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     portalRedirecionar('index.php?pagina=principal');
 }
 
-$pagina = (string)($_GET['pagina'] ?? (isset($_SESSION['usuario_id']) ? 'principal' : 'login'));
-$usuarioLogado = portalUsuarioAtual();
-if ($pagina === 'principal' && !$usuarioLogado) portalRedirecionar('index.php');
-if ($pagina !== 'principal' && $usuarioLogado && $pagina === 'login') portalRedirecionar('index.php?pagina=principal');
-$flash = $_SESSION['portal_flash'] ?? null; unset($_SESSION['portal_flash']);
-$csrf = portalToken();
-if ($pagina === 'primeiro-acesso') require __DIR__ . '/../View/primeiroAcesso.php';
-elseif ($pagina === 'principal' && $usuarioLogado) {
-    $idUsuario = (int)$usuarioLogado->getID();
-    $formacoes = (new FormacaoAcad())->listarFormacoes($idUsuario);
-    $experiencias = (new ExperienciaProfissionalController())->gerarLista($idUsuario);
-    $outrasFormacoes = (new OutrasFormacoes())->listarOutrasFormacoes($idUsuario);
-    require __DIR__ . '/../View/principal.php';
-} else require __DIR__ . '/../View/login.php';
