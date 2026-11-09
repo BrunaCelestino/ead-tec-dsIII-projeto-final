@@ -11,6 +11,7 @@ class Usuario
     private ?string $email = null;
     private ?string $senha = null;
     private ?string $ultimoErro = null;
+    private ?int $codigoUltimoErro = null;
 
     public function setID(?int $v): void
     {
@@ -61,6 +62,11 @@ class Usuario
         return $this->ultimoErro;
     }
 
+    public function getCodigoUltimoErro(): ?int
+    {
+        return $this->codigoUltimoErro;
+    }
+
     public function inserirBD(): bool
     {
         try {
@@ -73,9 +79,12 @@ class Usuario
             $stmt->close();
             $con->close();
             $this->ultimoErro = null;
+            $this->codigoUltimoErro = null;
             return true;
         } catch (Throwable $e) {
             $this->ultimoErro = $e->getMessage();
+            $this->codigoUltimoErro = $e instanceof mysqli_sql_exception ? (int)$e->getCode() : null;
+            error_log('Falha ao cadastrar usuário: ' . $e->getMessage());
             return false;
         }
     }
