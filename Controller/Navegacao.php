@@ -46,7 +46,7 @@ if ($isAdminArea) {
     if ($paginaAdmin === 'login' && $adminLogado) {
         portalRedirecionar('index.php?area=admin&pagina=principal');
     }
-    if (!in_array($paginaAdmin, ['login', 'principal', 'usuarios', 'administradores'], true)) {
+    if (!in_array($paginaAdmin, ['login', 'principal', 'usuarios', 'administradores', 'visualizar'], true)) {
         $paginaAdmin = $adminLogado ? 'principal' : 'login';
     }
 
@@ -61,6 +61,18 @@ if ($isAdminArea) {
     } elseif ($paginaAdmin === 'usuarios') {
         $usuariosCadastrados = (new AdministradorController())->gerarListaUsuarios();
         require __DIR__ . '/../View/administracao/ADMListarCadastrados.php';
+    } elseif ($paginaAdmin === 'visualizar') {
+        $idVisualizado = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+        $dadosCadastro = $idVisualizado ? (new AdministradorController())->gerarDadosUsuario((int)$idVisualizado) : null;
+        if ($dadosCadastro === null) {
+            portalMensagem('Cadastro não encontrado.', 'erro');
+            portalRedirecionar('index.php?area=admin&pagina=usuarios');
+        }
+        $usuarioVisualizado = $dadosCadastro['usuario'];
+        $formacoesVisualizadas = $dadosCadastro['formacoes'];
+        $experienciasVisualizadas = $dadosCadastro['experiencias'];
+        $outrasFormacoesVisualizadas = $dadosCadastro['outrasFormacoes'];
+        require __DIR__ . '/../View/administracao/ADMVisualizarCadastro.php';
     } else {
         $administradoresCadastrados = (new AdministradorController())->gerarLista();
         require __DIR__ . '/../View/administracao/ADMListarAdministradores.php';
