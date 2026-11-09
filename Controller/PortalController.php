@@ -71,7 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['area'] ?? '') !== 'admin'
             portalMensagem('Cadastro realizado com sucesso. Faça seu login.');
             portalRedirecionar('index.php');
         }
-        portalMensagem('Não foi possível realizar o cadastro. Verifique se o CPF já está cadastrado.', 'erro');
+        if ($usuario->getCodigoUltimoErro() === 1062) {
+            portalMensagem('Este CPF já está cadastrado. Confira o número informado.', 'erro');
+        } else {
+            error_log('Cadastro não concluído. Código: ' . ($usuario->getCodigoUltimoErro() ?? 'indisponível') . '; detalhe: ' . ($usuario->getUltimoErro() ?? 'sem detalhe'));
+            portalMensagem('Não foi possível concluir o cadastro por um erro no banco de dados. Confira a configuração e a estrutura do banco.', 'erro');
+        }
         portalRedirecionar('index.php?pagina=primeiro-acesso');
     }
 
