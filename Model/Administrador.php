@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 require_once __DIR__ . '/ConexaoBD.php';
 
 class Administrador
@@ -9,74 +10,68 @@ class Administrador
     private ?string $cpf = null;
     private ?string $senha = null;
 
-    public function setID(?int $v): void
-    {
-        $this->id = $v;
-    }
-    public function getID(): ?int
-    {
-        return $this->id;
-    }
-    public function setNome(?string $v): void
-    {
-        $this->nome = $v;
-    }
-    public function getNome(): ?string
-    {
-        return $this->nome;
-    }
-    public function setCPF(?string $v): void
-    {
-        $this->cpf = $v;
-    }
-    public function getCPF(): ?string
-    {
-        return $this->cpf;
-    }
-    public function getSenha(): ?string
-    {
-        return $this->senha;
-    }
-    public function setSenha(?string $v): void
-    {
-        $this->senha = $v;
-    }
+    public function getID(): ?int { return $this->id; }
+    public function setID(?int $id): void { $this->id = $id; }
+    public function getNome(): ?string { return $this->nome; }
+    public function setNome(?string $nome): void { $this->nome = $nome; }
+    public function getCPF(): ?string { return $this->cpf; }
+    public function setCPF(?string $cpf): void { $this->cpf = $cpf; }
+    public function getSenha(): ?string { return $this->senha; }
+    public function setSenha(?string $senha): void { $this->senha = $senha; }
 
-
-
-    public function carregarAdministrador($cpf)
+    public function carregarAdministrador(string $cpf): bool
     {
-        require_once 'ConexaoBD.php';
-        $con = new ConexaoBD();
-        $conn = $con->conectar();
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-        $sql = "SELECT * FROM administrador WHERE cpf = " . $cpf;
-        $re = $conn->query($sql);
-        $r = $re->fetch_object();
-        if ($r != null) {
-            $this->id = $r->idadministrador;
-            $this->nome = $r->nome;
-            $this->cpf = $r->cpf;
-            $this->senha = $r->senha;
-            $conn->close();
+        try {
+            $con = (new ConexaoBD())->conectar();
+            $stmt = $con->prepare('SELECT idadministrador, nome, cpf, senha FROM administrador WHERE cpf = ? LIMIT 1');
+            $stmt->bind_param('s', $cpf);
+            $stmt->execute();
+            $row = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            $con->close();
+
+            if (!$row) return false;
+            $this->id = (int)$row['idadministrador'];
+            $this->nome = $row['nome'];
+            $this->cpf = $row['cpf'];
+            $this->senha = $row['senha'];
             return true;
-        } else {
-            $conn->close()
+        } catch (Throwable $e) {
+            error_log('Erro ao carregar administrador: ' . $e->getMessage());
+            return false;
         }
-        return false;
     }
 
-         public function listaCadastrados()
+    public function atualizarSenha(string $senhaHash): bool
     {
-        $con = (new ConexaoBD())->conectar();
-        $result = $con->query("SELECT idadministrador, nome, cpf FROM administrador;");
-        $rows = $result->fetch_all(MYSQLI_ASSOC);
-        $result->free();
-        $con->close();
-        return $rows;
+        if ($this->id === null) return false;
+        try {
+            $con = (new ConexaoBD())->conectar();
+            $stmt = $con->prepare('UPDATE administrador SET senha = ? WHERE idadministrador = ?');
+            $stmt->bind_param('si', $senhaHash, $this->id);
+            $stmt->execute();
+            $stmt->close();
+            $con->close();
+            $this->senha = $senhaHash;
+            return true;
+        } catch (Throwable $e) {
+            error_log('Erro ao atualizar senha do administrador: ' . $e->getMessage());
+            return false;
+        }
     }
 
-   
+    public function listaCadastrados(): array
+    {
+        try {
+            $con = (new ConexaoBD())->conectar();
+            $result = $con->query('SELECT idadministrador, nome, cpf FROM administrador ORDER BY nome');
+            $rows = $result->fetch_all(MYSQLI_ASSOC);
+            $result->free();
+            $con->close();
+            return $rows;
+        } catch (Throwable $e) {
+            error_log('Erro ao listar administradores: ' . $e->getMessage());
+            return [];
+        }
+    }
 }
