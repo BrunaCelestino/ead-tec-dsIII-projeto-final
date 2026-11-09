@@ -184,14 +184,10 @@ class Usuario
         }
         try {
             $con = (new ConexaoBD())->conectar();
-            if ($this->senha !== null && $this->senha !== '') {
-                $hash = password_hash($this->senha, PASSWORD_DEFAULT);
-                $stmt = $con->prepare('UPDATE usuario SET nome=?,cpf=?,dataNascimento=?,email=?,senha=? WHERE idusuario=?');
-                $stmt->bind_param('sssssi', $this->nome, $this->cpf, $this->dataNascimento, $this->email, $hash, $this->id);
-            } else {
-                $stmt = $con->prepare('UPDATE usuario SET nome=?,cpf=?,dataNascimento=?,email=? WHERE idusuario=?');
-                $stmt->bind_param('ssssi', $this->nome, $this->cpf, $this->dataNascimento, $this->email, $this->id);
-            }
+            // A senha já está armazenada como hash. Atualizações de dados pessoais
+            // não devem reprocessar esse hash nem alterar a senha do usuário.
+            $stmt = $con->prepare('UPDATE usuario SET nome=?,cpf=?,dataNascimento=?,email=? WHERE idusuario=?');
+            $stmt->bind_param('ssssi', $this->nome, $this->cpf, $this->dataNascimento, $this->email, $this->id);
             $stmt->execute();
             $stmt->close();
             $con->close();
