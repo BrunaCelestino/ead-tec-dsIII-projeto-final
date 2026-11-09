@@ -184,8 +184,7 @@ class Usuario
         }
         try {
             $con = (new ConexaoBD())->conectar();
-            // A senha já está armazenada como hash. Atualizações de dados pessoais
-            // não devem reprocessar esse hash nem alterar a senha do usuário.
+            // Atualiza os dados cadastrais sem modificar a senha.
             $stmt = $con->prepare('UPDATE usuario SET nome=?,cpf=?,dataNascimento=?,email=? WHERE idusuario=?');
             $stmt->bind_param('ssssi', $this->nome, $this->cpf, $this->dataNascimento, $this->email, $this->id);
             $stmt->execute();
