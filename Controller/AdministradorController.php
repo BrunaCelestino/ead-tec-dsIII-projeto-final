@@ -16,8 +16,7 @@ class AdministradorController
         $senhaArmazenada = (string)$administrador->getSenha();
         $valida = password_verify($senha, $senhaArmazenada);
 
-        // Compatibilidade temporária com o administrador de demonstração legado.
-        // Após o primeiro login, a senha em texto puro é substituída por hash.
+        // Verifica senhas cadastradas antes da adoção de criptografia e atualiza o registro após a autenticação.
         if (!$valida && hash_equals($senhaArmazenada, $senha)) {
             $valida = true;
             $administrador->atualizarSenha(password_hash($senha, PASSWORD_DEFAULT));
