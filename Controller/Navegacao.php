@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/PortalController.php';
 
-// O index.php é o único ponto de entrada; a área é definida pela query string.
+// Identifica se a requisição pertence à área administrativa.
 $isAdminArea = (($_GET['area'] ?? '') === 'admin');
 
 if ($isAdminArea) {
