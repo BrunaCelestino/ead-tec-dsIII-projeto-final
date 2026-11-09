@@ -12,5 +12,5 @@ function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'
 <label for="txtLogin">CPF</label><input class="w3-input w3-border w3-round" id="txtLogin" name="txtLogin" type="text" inputmode="numeric" maxlength="14" placeholder="Digite seu CPF" required>
 <label for="txtSenha" class="w3-margin-top">Senha</label><input class="w3-input w3-border w3-round" id="txtSenha" name="txtSenha" type="password" required>
 <button class="w3-button w3-blue w3-block w3-round w3-margin-top" type="submit">Entrar</button>
-<a class="w3-button w3-light-grey w3-block w3-round w3-margin-top" href="index.php?pagina=primeiro-acesso">Primeiro acesso</a>
+<a class="w3-button w3-light-grey w3-block w3-round w3-margin-top" href="index.php?pagina=primeiro-acesso">Primeiro acesso</a>\n<a class="w3-button w3-white w3-block w3-round w3-margin-top" href="administracao.php">Acesso administrativo</a>
 </form></main></body></html>
