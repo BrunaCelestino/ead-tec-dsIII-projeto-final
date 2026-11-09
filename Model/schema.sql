@@ -58,12 +58,11 @@ CREATE TABLE IF NOT EXISTS administrador (
     UNIQUE KEY administrador_cpf_UNIQUE (cpf)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Compatibilidade com bancos criados por versões anteriores do projeto.
+-- Ajusta o tamanho dos campos de senha para armazenar os hashes.
 ALTER TABLE usuario MODIFY senha VARCHAR(255) NULL;
 ALTER TABLE administrador MODIFY senha VARCHAR(255) NOT NULL;
 
--- Administrador demonstrativo da atividade. A senha será convertida para hash
--- automaticamente no primeiro login bem-sucedido.
+-- Insere o administrador inicial caso ele ainda não esteja cadastrado. A senha é atualizada para hash no primeiro acesso.
 INSERT INTO administrador (nome, cpf, senha)
 SELECT 'Bia', '22222222222', 'bia123'
 WHERE NOT EXISTS (SELECT 1 FROM administrador WHERE cpf = '22222222222');
