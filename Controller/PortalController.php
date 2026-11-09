@@ -43,6 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['area'] ?? '') !== 'admin'
         if ($cpf !== '' && $usuario->carregarUsuario($cpf) && $usuario->validarSenha($senha)) {
             session_regenerate_id(true);
             $_SESSION['usuario_id'] = $usuario->getID();
+            unset($_SESSION['administrador_id']);
             portalMensagem('Login realizado com sucesso.');
             portalRedirecionar('index.php?pagina=principal');
         }
