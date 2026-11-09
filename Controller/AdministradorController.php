@@ -43,6 +43,26 @@ class AdministradorController
         return (new Usuario())->listarUsuarios();
     }
 
+    public function gerarDadosUsuario(int $idUsuario): ?array
+    {
+        require_once __DIR__ . '/../Model/Usuario.php';
+        require_once __DIR__ . '/../Model/FormacaoAcad.php';
+        require_once __DIR__ . '/../Model/ExperienciaProfissional.php';
+        require_once __DIR__ . '/../Model/OutrasFormacoes.php';
+
+        if ($idUsuario <= 0) return null;
+
+        $usuario = new Usuario();
+        if (!$usuario->carregarPorID($idUsuario)) return null;
+
+        return [
+            'usuario' => $usuario,
+            'formacoes' => (new FormacaoAcad())->listarFormacoes($idUsuario),
+            'experiencias' => (new ExperienciaProfissional())->listarExperiencias($idUsuario),
+            'outrasFormacoes' => (new OutrasFormacoes())->listarOutrasFormacoes($idUsuario),
+        ];
+    }
+
     public function sair(): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) session_start();
