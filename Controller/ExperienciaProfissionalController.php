@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../Model/ExperienciaProfissional.php';
 
 /**
- * Controla o fluxo de dados da experiência profissional entre a View e o Model.
+ * Gerencia as operações de experiência profissional do usuário.
  */
 class ExperienciaProfissionalController
 {
@@ -26,7 +26,7 @@ class ExperienciaProfissionalController
     }
 
     /**
-     * Remove somente um registro pertencente ao usuário autenticado.
+     * Exclui uma experiência vinculada ao usuário informado.
      */
     public function remover(int $id, int $idusuario): bool
     {
@@ -35,7 +35,7 @@ class ExperienciaProfissionalController
     }
 
     /**
-     * Retorna a lista de experiências do usuário informado.
+     * Consulta as experiências profissionais do usuário.
      */
     public function gerarLista(int $idusuario): array
     {
