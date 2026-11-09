@@ -63,5 +63,6 @@ ALTER TABLE administrador MODIFY senha VARCHAR(255) NOT NULL;
 
 -- Administrador demonstrativo da atividade. A senha será convertida para hash
 -- automaticamente no primeiro login bem-sucedido.
-INSERT IGNORE INTO administrador (nome, cpf, senha)
-VALUES ('Bia', '22222222222', 'bia123');
+INSERT INTO administrador (nome, cpf, senha)
+SELECT 'Bia', '22222222222', 'bia123'
+WHERE NOT EXISTS (SELECT 1 FROM administrador WHERE cpf = '22222222222');
