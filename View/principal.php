@@ -1,7 +1,7 @@
 <?php
 function h($v): string { return htmlspecialchars((string)$v, ENT_QUOTES, 'UTF-8'); }
 function dataBR($v): string { if (!$v) return ''; $d=DateTime::createFromFormat('Y-m-d',(string)$v); return $d ? $d->format('d/m/Y') : h($v); }
-function tabelaRegistros(array $rows, string $tipo, array $colunas): void {
+function tabelaRegistros(array $rows, string $tipo, array $colunas, string $idCampo): void {
  echo '<div class="w3-responsive"><table class="w3-table-all w3-margin-bottom"><thead><tr>';
  foreach ($colunas as $label) echo '<th>'.h($label).'</th>';
  echo '<th>Apagar</th></tr></thead><tbody>';
@@ -10,7 +10,7 @@ function tabelaRegistros(array $rows, string $tipo, array $colunas): void {
   echo '<tr><td>'.h(dataBR($r['inicio'] ?? '')).'</td><td>'.h(dataBR($r['fim'] ?? '')).'</td>';
   if ($tipo === 'experiencia') echo '<td>'.h($r['empresa'] ?? '').'</td>';
   echo '<td>'.h($r['descricao'] ?? '').'</td><td><form method="post" action="index.php?pagina=principal" onsubmit="return confirm(\'Deseja excluir este registro?\')">';
-  echo '<input type="hidden" name="csrf_token" value="'.h($GLOBALS['csrf']).'"><input type="hidden" name="idRegistro" value="'.(int)$r[array_key_first(array_filter(array_keys($r),fn($k)=>str_starts_with($k,'id') && $k!=='idusuario'))].'">';
+  echo '<input type="hidden" name="csrf_token" value="'.h($GLOBALS['csrf']).'"><input type="hidden" name="idRegistro" value="'.(int)$r[$idCampo].'">';
   echo '<input type="hidden" name="acao" value="excluir-'.($tipo==='experiencia'?'experiencia':($tipo==='outras'?'outra-formacao':'formacao')).'"><button class="w3-button w3-red w3-small" type="submit">Apagar</button></form></td></tr>';
  }
  echo '</tbody></table></div>';
@@ -35,13 +35,13 @@ function tabelaRegistros(array $rows, string $tipo, array $colunas): void {
 <section id="formacao" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Formação Acadêmica</h2>
 <form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-formacao">
 <div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Curso / instituição / descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="150" required><button class="w3-button w3-blue" type="submit">Adicionar formação</button></form>
-<?php tabelaRegistros($formacoes,'formacao',['Início','Fim','Descrição']); ?></section>
+<?php tabelaRegistros($formacoes,'formacao',['Início','Fim','Descrição'],'idformacaoAcademica'); ?></section>
 <section id="experiencia" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Experiência Profissional</h2>
 <form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-experiencia">
 <div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Empresa</label><input class="w3-input w3-border" name="txtEmpresa" maxlength="45" required><label>Descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="45" required><button class="w3-button w3-blue" type="submit">Adicionar experiência</button></form>
-<?php tabelaRegistros($experiencias,'experiencia',['Início','Fim','Empresa','Descrição']); ?></section>
+<?php tabelaRegistros($experiencias,'experiencia',['Início','Fim','Empresa','Descrição'],'idexperienciaprofissional'); ?></section>
 <section id="outras" class="secao w3-card w3-white w3-padding-large w3-margin-bottom"><h2 class="w3-text-blue">Outras Formações</h2>
 <form method="post" action="index.php?pagina=principal"><input type="hidden" name="csrf_token" value="<?= h($csrf) ?>"><input type="hidden" name="acao" value="adicionar-outra-formacao">
 <div class="w3-row-padding"><div class="w3-half"><label>Data inicial</label><input class="w3-input w3-border" type="date" name="txtInicio" required></div><div class="w3-half"><label>Data final</label><input class="w3-input w3-border" type="date" name="txtFim" required></div></div><label>Descrição</label><input class="w3-input w3-border" name="txtDescricao" maxlength="150" required><button class="w3-button w3-blue" type="submit">Adicionar outra formação</button></form>
-<?php tabelaRegistros($outrasFormacoes,'outras',['Início','Fim','Descrição']); ?></section>
+<?php tabelaRegistros($outrasFormacoes,'outras',['Início','Fim','Descrição'],'idoutrasformacoes'); ?></section>
 <footer class="w3-center w3-padding-32">Sistema de Currículos</footer></main></body></html>
