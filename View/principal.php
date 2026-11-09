@@ -95,8 +95,8 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
         .tabela-registros tr:last-child td { border-bottom:0; }
         .coluna-acao { width:120px; }
         .sem-registros { padding:20px !important; color:#7b8794; text-align:center; }
-        .botao-excluir { border:0; border-radius:5px; padding:7px 10px; color:#fff; background:var(--azul); cursor:pointer; white-space:nowrap; }
-        .botao-excluir:hover { background:#167fc4; }
+        .botao-excluir { border:0; border-radius:5px; padding:7px 10px; color:#fff; background:#e05252; cursor:pointer; white-space:nowrap; }
+        .botao-excluir:hover { background:#c93636; }
         footer { max-width:1120px; margin:28px auto 0; padding:18px; color:#8190a0; text-align:center; font-size:13px; }
         @media(max-width:760px) {
             .menu-lateral { position:relative; width:100%; padding:14px; }
