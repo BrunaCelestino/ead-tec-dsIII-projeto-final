@@ -89,9 +89,9 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
         #dados-pessoais .campo-com-icone .icone-campo { flex-basis:28px; width:28px; height:24px; }
         #dados-pessoais .campo { margin-bottom:8px; }
         .tabela-container { width:100%; overflow-x:auto; margin-top:22px; }
-        .tabela-registros { width:100%; border-collapse:collapse; font-size:14px; }
-        .tabela-registros th { padding:8px 13px; background:var(--azul); color:#fff; text-align:center; white-space:nowrap; font-size:12px; }
-        .tabela-registros td { padding:8px 13px; border-bottom:1px solid #e8edf2; vertical-align:middle; background:#fff; }
+        .tabela-registros { width:100%; border-collapse:collapse; border:1px solid #d8d8d8; font-size:14px; table-layout:fixed; }
+        .tabela-registros th { padding:8px 13px; background:var(--azul); color:#fff; text-align:center; white-space:nowrap; font-size:12px; border:1px solid #d8d8d8; }
+        .tabela-registros td { padding:8px 13px; border:1px solid #d8d8d8; vertical-align:middle; text-align:center; background:#fff; }
         .tabela-registros tr:last-child td { border-bottom:0; }
         .coluna-acao { width:120px; }
         .sem-registros { padding:20px !important; color:#7b8794; text-align:center; }
@@ -163,11 +163,10 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
                 <input type="hidden" name="acao" value="adicionar-formacao">
                 <div class="linha-campos">
-                    <div><label for="formacao-inicio">Data inicial</label><input class="campo" id="formacao-inicio" type="date" name="txtInicio" required></div>
-                    <div><label for="formacao-fim">Data final</label><input class="campo" id="formacao-fim" type="date" name="txtFim" required></div>
+                    <div><label for="formacao-inicio">Data inicial</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="formacao-inicio" type="date" name="txtInicio" required></div></div>
+                    <div><label for="formacao-fim">Data final</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="formacao-fim" type="date" name="txtFim" required></div></div>
                 </div>
-                <label for="formacao-descricao">Curso / instituição / descrição</label>
-                <input class="campo" id="formacao-descricao" name="txtDescricao" maxlength="150" required>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 5h18M3 12h18M3 19h18"/></svg><input class="campo" id="formacao-descricao" name="txtDescricao" maxlength="150" placeholder="Descrição: curso / instituição" required></div>
                 <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($formacoes, 'formacao', ['Início', 'Fim', 'Descrição'], 'idformacaoAcademica'); ?>
@@ -179,13 +178,11 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
                 <input type="hidden" name="acao" value="adicionar-experiencia">
                 <div class="linha-campos">
-                    <div><label for="experiencia-inicio">Data inicial</label><input class="campo" id="experiencia-inicio" type="date" name="txtInicio" required></div>
-                    <div><label for="experiencia-fim">Data final</label><input class="campo" id="experiencia-fim" type="date" name="txtFim" required></div>
+                    <div><label for="experiencia-inicio">Data inicial</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="experiencia-inicio" type="date" name="txtInicio" required></div></div>
+                    <div><label for="experiencia-fim">Data final</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="experiencia-fim" type="date" name="txtFim" required></div></div>
                 </div>
-                <label for="empresa">Empresa</label>
-                <input class="campo" id="empresa" name="txtEmpresa" maxlength="45" required>
-                <label for="experiencia-descricao">Descrição</label>
-                <input class="campo" id="experiencia-descricao" name="txtDescricao" maxlength="45" required>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 5h18M3 12h18M3 19h18"/></svg><input class="campo" id="empresa" name="txtEmpresa" maxlength="45" placeholder="Empresa" required></div>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 5h18M3 12h18M3 19h18"/></svg><input class="campo" id="experiencia-descricao" name="txtDescricao" maxlength="45" placeholder="Descrição" required></div>
                 <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($experiencias, 'experiencia', ['Início', 'Fim', 'Empresa', 'Descrição'], 'idexperienciaprofissional'); ?>
@@ -197,11 +194,10 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
                 <input type="hidden" name="csrf_token" value="<?= h($csrf) ?>">
                 <input type="hidden" name="acao" value="adicionar-outra-formacao">
                 <div class="linha-campos">
-                    <div><label for="outras-inicio">Data inicial</label><input class="campo" id="outras-inicio" type="date" name="txtInicio" required></div>
-                    <div><label for="outras-fim">Data final</label><input class="campo" id="outras-fim" type="date" name="txtFim" required></div>
+                    <div><label for="outras-inicio">Data inicial</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="outras-inicio" type="date" name="txtInicio" required></div></div>
+                    <div><label for="outras-fim">Data final</label><div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg><input class="campo" id="outras-fim" type="date" name="txtFim" required></div></div>
                 </div>
-                <label for="outras-descricao">Descrição</label>
-                <input class="campo" id="outras-descricao" name="txtDescricao" maxlength="150" required>
+                <div class="campo-com-icone"><svg class="icone-campo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 5h18M3 12h18M3 19h18"/></svg><input class="campo" id="outras-descricao" name="txtDescricao" maxlength="150" placeholder="Ex: Curso de Inglês - Inglês City" required></div>
                 <button class="botao-principal botao-adicionar" type="submit" aria-label="Adicionar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="7" r="4"/><path d="M2 21v-2a7 7 0 0 1 14 0v2M19 8v8M15 12h8"/></svg></button>
             </form>
             <?php tabelaRegistros($outrasFormacoes, 'outras', ['Início', 'Fim', 'Descrição'], 'idoutrasformacoes'); ?>
