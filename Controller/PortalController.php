@@ -84,7 +84,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($acao === 'atualizar-dados') {
         $usuario->setNome(trim((string)($_POST['txtNome'] ?? '')));
         $usuario->setCPF(preg_replace('/\D+/', '', (string)($_POST['txtCPF'] ?? '')));
-        $usuario->setDataNascimento((string)($_POST['txtData'] ?? ''));
+        $dataNascimento = trim((string)($_POST['txtData'] ?? ''));
+        $usuario->setDataNascimento($dataNascimento !== '' ? $dataNascimento : null);
         $email = trim((string)($_POST['txtEmail'] ?? ''));
         $usuario->setEmail($email !== '' ? $email : null);
         if ($usuario->getNome() !== '' && strlen((string)$usuario->getCPF()) === 11 && ($email === '' || filter_var($email, FILTER_VALIDATE_EMAIL)) && $usuario->alterarBD()) portalMensagem('Dados pessoais atualizados com sucesso.');
