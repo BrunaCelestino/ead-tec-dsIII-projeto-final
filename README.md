@@ -21,6 +21,9 @@ Projeto acadêmico desenvolvido em PHP orientado a objetos, com arquitetura MVC 
 - `Controller/Navegacao.php`: seleciona a View solicitada, verifica a sessão e carrega os dados necessários para a tela principal.
 - `Controller/PortalController.php`: processa as ações enviadas pelos formulários, incluindo autenticação, cadastro, sessão, validação CSRF e atualização de dados.
 - `Controller/ExperienciaProfissionalController.php`: inclusão, remoção segura e listagem das experiências profissionais.
+- `Controller/AdministradorController.php`: autenticação administrativa e consultas de usuários e administradores.
+- `administracao.php`: entrada da área administrativa, roteada por `Controller/Navegacao.php`.
+- `View/administracao/`: login, painel e listagens administrativas.
 - `View/login.php`: login por CPF e senha.
 - `View/primeiroAcesso.php`: cadastro inicial.
 - `View/principal.php`: página central com dados pessoais, formação acadêmica, experiência profissional e outras formações.
@@ -35,4 +38,5 @@ O módulo original permanece disponível em `outras-formacoes.php` e documentado
 - O banco deve ser criado antes do primeiro acesso.
 - O primeiro usuário deve ser cadastrado pela opção **Primeiro acesso**.
 - A tabela de experiência profissional possui campos `empresa` e `descricao` com limite de 45 caracteres, conforme o schema atual.
-- O projeto não inclui recuperação de senha, envio de e-mail ou painel administrativo nesta etapa.
+- O painel administrativo é acessado por `http://localhost/ead-tec-dsIII-projeto-final/administracao.php`.
+- O schema cria um administrador demonstrativo com CPF `22222222222` e senha inicial `bia123`. No primeiro login válido, a senha legada é convertida para hash. Altere essa credencial em ambientes não demonstrativos.
