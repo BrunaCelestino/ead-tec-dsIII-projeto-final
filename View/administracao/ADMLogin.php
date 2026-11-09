@@ -1,84 +1,32 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
-
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login administrativo - Sistema de Currículos</title>
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <title>Administrador</title>
 </head>
-
-<body>
-
-    <form action="/Controller/navegacao.php" method="post"
-        class="w3-container w3-card-4 w3-light-grey w3-text-blue w3-margin w3-display-middle"
-        style="width: 30%;">
-
-        <input type="hidden" name="nome_form" value="frmLoginADM">
-
-        <h2 class="w3-center">Administrador</h2>
-
-        <div class="w3-row w3-section">
-            <div class="w3-col" style="width:11%">
-                <i class="w3-xxlarge fa fa-user"></i>
+<body class="w3-light-grey">
+<main class="w3-container" style="max-width:480px;margin:8vh auto">
+    <form action="administracao.php" method="post" class="w3-card-4 w3-white w3-padding-large w3-round-large">
+        <h2 class="w3-center w3-text-blue">Sistema de Currículos</h2>
+        <h3 class="w3-center">Área do administrador</h3>
+        <?php if (!empty($flash)): ?>
+            <div class="w3-panel <?= ($flash['tipo'] ?? '') === 'erro' ? 'w3-pale-red' : 'w3-pale-green' ?>">
+                <?= htmlspecialchars((string)($flash['texto'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
             </div>
-
-            <div class="w3-rest">
-                <input class="w3-input w3-border w3-round-large"
-                    name="txtLoginADM"
-                    type="text"
-                    placeholder="Login CPF (ex.: 33333333333)">
-            </div>
-        </div>
-
-        <div class="w3-row w3-section">
-            <div class="w3-col" style="width:11%">
-                <i class="w3-xxlarge fa fa-lock"></i>
-            </div>
-
-            <div class="w3-rest">
-                <input class="w3-input w3-border w3-round-large"
-                    name="txtSenhaADM"
-                    type="password"
-                    placeholder="Senha">
-            </div>
-        </div>
-
-        <div class="w3-row w3-section">
-
-            <div class="w3-half">
-                <button type="submit" name="btnLogin"
-                    class="w3-button w3-block w3-margin w3-blue w3-round-large"
-                    style="width: 90%;">
-                    Entrar
-                </button>
-            </div>
-
-            <div class="w3-half">
-                <button type="submit" name="btnPrimeiroAcesso"
-                    class="w3-button w3-block w3-margin w3-blue w3-round-large"
-                    style="width: 90%;">
-                    Primeiro Acesso?
-                </button>
-            </div>
-
-            <div class="w3-center">
-                <button type="submit" name="btnADM"
-                    class="w3-button w3-block w3-margin w3-blue w3-round-large"
-                    style="width: 90%;">
-                    Login como Administrador
-                </button>
-            </div>
-
-        </div>
-
+        <?php endif; ?>
+        <input type="hidden" name="area" value="admin">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+        <input type="hidden" name="acao_admin" value="login">
+        <label for="cpf_admin">CPF</label>
+        <input class="w3-input w3-border w3-round" id="cpf_admin" name="cpf_admin" type="text" inputmode="numeric" maxlength="14" required>
+        <label for="senha_admin" class="w3-margin-top">Senha</label>
+        <input class="w3-input w3-border w3-round" id="senha_admin" name="senha_admin" type="password" required>
+        <button class="w3-button w3-blue w3-block w3-round w3-margin-top" type="submit">Entrar</button>
+        <a class="w3-button w3-light-grey w3-block w3-round w3-margin-top" href="index.php">Voltar ao portal</a>
     </form>
-
+</main>
 </body>
 </html>
