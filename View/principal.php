@@ -49,10 +49,10 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Meu currículo | Sistema de Currículos</title>
     <style>
-        :root { --azul:#174a7e; --azul-escuro:#12395f; --azul-claro:#eaf2fa; --fundo:#f3f6fa; --texto:#263445; }
+        :root { --azul:#2196e6; --azul-escuro:#16b5c9; --azul-claro:#e8f7fb; --fundo:#ffffff; --texto:#45515c; --cartao:#f1f1f1; }
         * { box-sizing:border-box; }
         html { scroll-behavior:smooth; scroll-padding-top:24px; }
-        body { margin:0; background:var(--fundo); color:var(--texto); font-family:Arial,Helvetica,sans-serif; }
+        body { margin:0; background:#fff; color:var(--texto); font-family:Arial,Helvetica,sans-serif; }
         .menu-lateral { position:fixed; inset:0 auto 0 0; width:250px; background:var(--azul); color:#fff; padding:26px 16px; display:flex; flex-direction:column; z-index:10; box-shadow:2px 0 12px #102b461c; }
         .marca { padding:0 14px 28px; font-size:18px; line-height:1.45; font-weight:bold; letter-spacing:.5px; }
         .menu-links { display:flex; flex-direction:column; gap:6px; }
@@ -69,24 +69,24 @@ function tabelaRegistros(array $registros, string $tipo, array $colunas, string 
         .alerta { max-width:1120px; margin:0 auto 22px; padding:14px 18px; border-radius:8px; }
         .alerta.sucesso { background:#e8f5ed; color:#21633b; border:1px solid #c9e8d3; }
         .alerta.erro { background:#fff0f0; color:#9c2929; border:1px solid #f1cccc; }
-        .secao { max-width:1120px; margin:0 auto 24px; padding:26px 30px; background:#fff; border:1px solid #e4eaf1; border-radius:12px; box-shadow:0 3px 12px #193b5b0a; }
-        .titulo-secao { display:flex; align-items:center; gap:12px; margin:0 0 22px; color:var(--azul-escuro); font-size:21px; font-weight:700; }
-        .titulo-secao i { display:grid; place-items:center; width:38px; height:38px; border-radius:9px; background:var(--azul-claro); color:var(--azul); }
-        label { display:block; margin:0 0 7px; color:#3b4b5d; font-size:14px; font-weight:600; }
-        .campo { width:100%; min-height:43px; padding:10px 12px; margin-bottom:17px; border:1px solid #ccd6e1; border-radius:6px; background:#fff; color:var(--texto); font:inherit; }
+        .secao { max-width:1120px; margin:0 auto 24px; padding:18px 22px; background:var(--cartao); border:0; border-radius:0; box-shadow:none; }
+        .titulo-secao { display:flex; align-items:center; gap:12px; margin:0 0 20px; color:var(--azul-escuro); font-size:21px; font-weight:400; }
+        .titulo-secao i { display:none; }\n        .campo-com-icone { position:relative; display:flex; align-items:center; gap:8px; }\n        .campo-com-icone .icone-campo { flex:0 0 22px; width:22px; height:22px; color:var(--azul); }\n        .campo-com-icone .campo { min-width:0; }\n        .botao-principal svg { width:22px; height:22px; vertical-align:middle; }
+        label { display:block; margin:0 0 7px; color:#2196e6; font-size:12px; font-weight:400; text-align:center; }
+        .campo { width:100%; min-height:38px; padding:8px 12px; margin-bottom:10px; border:1px solid #d4d4d4; border-radius:6px; background:#fff; color:var(--texto); font:inherit; font-size:13px; }
         .campo:focus { outline:2px solid #9fc4e8; border-color:var(--azul); }
-        .linha-campos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
-        .botao-principal { border:0; border-radius:6px; padding:11px 18px; background:var(--azul); color:#fff; font-weight:600; cursor:pointer; }
+        .linha-campos { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+        .botao-principal { display:block; min-width:70px; margin:4px auto 8px; border:0; border-radius:6px; padding:10px 22px; background:var(--azul); color:#fff; font-size:19px; cursor:pointer; }
         .botao-principal:hover { background:var(--azul-escuro); }
         .tabela-container { width:100%; overflow-x:auto; margin-top:22px; }
         .tabela-registros { width:100%; border-collapse:collapse; font-size:14px; }
-        .tabela-registros th { padding:12px 13px; background:#f0f4f8; color:#40546a; text-align:left; white-space:nowrap; }
-        .tabela-registros td { padding:12px 13px; border-bottom:1px solid #e8edf2; vertical-align:middle; }
+        .tabela-registros th { padding:8px 13px; background:var(--azul); color:#fff; text-align:center; white-space:nowrap; font-size:12px; }
+        .tabela-registros td { padding:8px 13px; border-bottom:1px solid #e8edf2; vertical-align:middle; background:#fff; }
         .tabela-registros tr:last-child td { border-bottom:0; }
         .coluna-acao { width:120px; }
         .sem-registros { padding:20px !important; color:#7b8794; text-align:center; }
-        .botao-excluir { border:0; border-radius:5px; padding:7px 10px; color:#a52d2d; background:#fff0f0; cursor:pointer; white-space:nowrap; }
-        .botao-excluir:hover { background:#fbdede; }
+        .botao-excluir { border:0; border-radius:5px; padding:7px 10px; color:#fff; background:var(--azul); cursor:pointer; white-space:nowrap; }
+        .botao-excluir:hover { background:#167fc4; }
         footer { max-width:1120px; margin:28px auto 0; padding:18px; color:#8190a0; text-align:center; font-size:13px; }
         @media(max-width:760px) {
             .menu-lateral { position:relative; width:100%; padding:14px; }
