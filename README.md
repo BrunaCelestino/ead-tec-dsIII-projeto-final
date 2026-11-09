@@ -18,7 +18,8 @@ Projeto acadêmico desenvolvido em PHP orientado a objetos, com arquitetura MVC 
 
 ## Fluxo do portal
 - `index.php`: ponto de entrada.
-- `Controller/PortalController.php`: autenticação, cadastro, sessão, validação CSRF, atualização de dados e operações dos módulos.
+- `Controller/PortalController.php`: ponto central de navegação, autenticação, cadastro, sessão, validação CSRF e atualização de dados.
+- `Controller/ExperienciaProfissionalController.php`: inclusão, remoção segura e listagem das experiências profissionais.
 - `View/login.php`: login por CPF e senha.
 - `View/primeiroAcesso.php`: cadastro inicial.
 - `View/principal.php`: página central com dados pessoais, formação acadêmica, experiência profissional e outras formações.
