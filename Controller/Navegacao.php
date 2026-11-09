@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/PortalController.php';
 
-$isAdminArea = basename((string)($_SERVER['SCRIPT_NAME'] ?? '')) === 'administracao.php'
-    || (($_GET['area'] ?? '') === 'admin');
+// O index.php é o único ponto de entrada; a área é definida pela query string.
+$isAdminArea = (($_GET['area'] ?? '') === 'admin');
 
 if ($isAdminArea) {
     require_once __DIR__ . '/AdministradorController.php';
@@ -16,7 +16,7 @@ if ($isAdminArea) {
         $acaoAdmin = (string)($_POST['acao_admin'] ?? '');
         if (!portalTokenValido()) {
             portalMensagem('Sessão expirada ou solicitação inválida. Tente novamente.', 'erro');
-            portalRedirecionar('administracao.php');
+            portalRedirecionar('index.php?area=admin');
         }
 
         $controllerAdmin = new AdministradorController();
@@ -25,26 +25,26 @@ if ($isAdminArea) {
             $senha = (string)($_POST['senha_admin'] ?? '');
             if ($controllerAdmin->login($cpf, $senha)) {
                 portalMensagem('Acesso administrativo realizado com sucesso.');
-                portalRedirecionar('administracao.php?pagina=principal');
+                portalRedirecionar('index.php?area=admin&pagina=principal');
             }
             portalMensagem('CPF ou senha de administrador inválidos.', 'erro');
-            portalRedirecionar('administracao.php');
+            portalRedirecionar('index.php?area=admin');
         }
 
         if ($acaoAdmin === 'sair') {
             $controllerAdmin->sair();
             portalMensagem('Você saiu da área administrativa.');
-            portalRedirecionar('administracao.php');
+            portalRedirecionar('index.php?area=admin');
         }
     }
 
     $adminLogado = !empty($_SESSION['administrador_id']);
     if ($paginaAdmin !== 'login' && !$adminLogado) {
         portalMensagem('Entre com sua conta de administrador para continuar.', 'erro');
-        portalRedirecionar('administracao.php');
+        portalRedirecionar('index.php?area=admin');
     }
     if ($paginaAdmin === 'login' && $adminLogado) {
-        portalRedirecionar('administracao.php?pagina=principal');
+        portalRedirecionar('index.php?area=admin&pagina=principal');
     }
     if (!in_array($paginaAdmin, ['login', 'principal', 'usuarios', 'administradores'], true)) {
         $paginaAdmin = $adminLogado ? 'principal' : 'login';
