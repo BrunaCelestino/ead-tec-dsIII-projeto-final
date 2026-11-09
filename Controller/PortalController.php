@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../Model/Usuario.php';
 require_once __DIR__ . '/../Model/FormacaoAcad.php';
-require_once __DIR__ . '/../Model/ExperienciaProfissional.php';
+require_once __DIR__ . '/ExperienciaProfissionalController.php';
 require_once __DIR__ . '/../Model/OutrasFormacoes.php';
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -104,8 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $ok = $m->inserirBD();
             } elseif ($acao === 'adicionar-experiencia') {
                 $empresa = trim((string)($_POST['txtEmpresa'] ?? ''));
-                $m = new ExperienciaProfissional(); $m->setIDUsuario($idUsuario); $m->setInicio($inicio); $m->setFim($fim); $m->setEmpresa($empresa); $m->setDescricao($descricao);
-                $ok = $empresa !== '' && $m->inserirBD();
+                $controller = new ExperienciaProfissionalController();
+                $ok = $empresa !== '' && strlen($empresa) <= 45 && strlen($descricao) <= 45
+                    && $controller->inserir($inicio, $fim, $empresa, $descricao, $idUsuario);
             } else {
                 $m = new OutrasFormacoes(); $m->setIDUsuario($idUsuario); $m->setInicio($inicio); $m->setFim($fim); $m->setDescricao($descricao);
                 $ok = $m->inserirBD();
@@ -117,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ok = false;
         if ($id && $id > 0) {
             if ($acao === 'excluir-formacao') { $m = new FormacaoAcad(); $ok = $m->excluirDoUsuario((int)$id, $idUsuario); }
-            elseif ($acao === 'excluir-experiencia') { $m = new ExperienciaProfissional(); $ok = $m->excluirDoUsuario((int)$id, $idUsuario); }
+            elseif ($acao === 'excluir-experiencia') { $controller = new ExperienciaProfissionalController(); $ok = $controller->remover((int)$id, $idUsuario); }
             else { $m = new OutrasFormacoes(); $ok = $m->excluirDoUsuario((int)$id, $idUsuario); }
         }
         portalMensagem($ok ? 'Informação excluída com sucesso.' : 'Operação não realizada. Registro não encontrado.', $ok ? 'sucesso' : 'erro');
@@ -135,7 +136,7 @@ if ($pagina === 'primeiro-acesso') require __DIR__ . '/../View/primeiroAcesso.ph
 elseif ($pagina === 'principal' && $usuarioLogado) {
     $idUsuario = (int)$usuarioLogado->getID();
     $formacoes = (new FormacaoAcad())->listarFormacoes($idUsuario);
-    $experiencias = (new ExperienciaProfissional())->listarExperiencias($idUsuario);
+    $experiencias = (new ExperienciaProfissionalController())->gerarLista($idUsuario);
     $outrasFormacoes = (new OutrasFormacoes())->listarOutrasFormacoes($idUsuario);
     require __DIR__ . '/../View/principal.php';
 } else require __DIR__ . '/../View/login.php';
