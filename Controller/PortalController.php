@@ -34,7 +34,7 @@ function portalUsuarioAtual(): ?Usuario {
     return $usuario;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && (($_POST['area'] ?? '') !== 'admin')) {
     $acao = (string)($_POST['acao'] ?? '');
     if ($acao === 'login') {
         $cpf = preg_replace('/\D+/', '', (string)($_POST['txtLogin'] ?? ''));
