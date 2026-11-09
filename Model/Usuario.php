@@ -95,6 +95,31 @@ class Usuario
         }
     }
 
+    public function carregarPorID(int $id): bool
+    {
+        try {
+            $con = (new ConexaoBD())->conectar();
+            $stmt = $con->prepare('SELECT idusuario,nome,cpf,dataNascimento,email,senha FROM usuario WHERE idusuario = ? LIMIT 1');
+            $stmt->bind_param('i', $id);
+            $stmt->execute();
+            $row = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+            $con->close();
+            if (!$row) { $this->ultimoErro = null; return false; }
+            $this->id = (int)$row['idusuario'];
+            $this->nome = $row['nome'];
+            $this->cpf = $row['cpf'];
+            $this->dataNascimento = $row['dataNascimento'];
+            $this->email = $row['email'];
+            $this->senha = $row['senha'];
+            $this->ultimoErro = null;
+            return true;
+        } catch (Throwable $e) {
+            $this->ultimoErro = $e->getMessage();
+            return false;
+        }
+    }
+
     public function validarSenha(string $senha): bool
     {
         return $this->senha !== null && password_verify($senha, $this->senha);
