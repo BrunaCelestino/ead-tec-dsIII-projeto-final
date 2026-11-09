@@ -1,5 +1,5 @@
 <?php
 declare(strict_types=1);
 
-// Ponto de entrada da funcionalidade Administração.
-require __DIR__ . '/View/ADMLogin.php';
+// Entrada independente para o módulo administrativo, com navegação centralizada.
+require __DIR__ . '/Controller/Navegacao.php';
